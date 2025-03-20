@@ -39,6 +39,7 @@ public class Utillities {
         var node_ptr = node;
         int cost = 0;
         int depth=0;
+        Set<Problem.Node> visited = new HashSet<>();
         while (node_ptr != null){
             for (var line : node_ptr.getLines()){
                 if(line!=null && line.getNode() == node_ptr.getParent()){
@@ -47,6 +48,11 @@ public class Utillities {
             }
             depth++;
             node_ptr=node_ptr.getParent();
+            if(visited.contains(node_ptr)){
+                return new Result(cost,depth,reached,failed);
+            }else {
+                visited.add(node_ptr);
+            }
         }
         return new Result(cost,depth,reached,failed);
     }

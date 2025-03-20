@@ -44,6 +44,7 @@ public class Handler implements MouseListener {
                 new Button(13,3,200,50,"BestFirstSearch") {
                     @Override
                     public void effect() {
+                        problem.problem_reset();
                         try {
                             if (algorythmThread!=null)
                                 algorythmThread.join();
@@ -76,6 +77,7 @@ public class Handler implements MouseListener {
                 new Button(13,5,200,50,"BFS") {
                     @Override
                     public void effect() {
+                        problem.problem_reset();
                         try {
                             if (algorythmThread!=null)
                                 algorythmThread.join();
@@ -108,6 +110,7 @@ public class Handler implements MouseListener {
                 new Button(13,7,200,50,"UCS") {
                     @Override
                     public void effect() {
+                        problem.problem_reset();
                         try {
                             if (algorythmThread!=null)
                                 algorythmThread.join();
@@ -140,6 +143,7 @@ public class Handler implements MouseListener {
                 new Button(13,9,200,50,"A*") {
                     @Override
                     public void effect() {
+                        problem.problem_reset();
                         try {
                             if (algorythmThread!=null)
                                 algorythmThread.join();
@@ -196,7 +200,12 @@ public class Handler implements MouseListener {
                                         problem.getNodes()[tx0][ty0],
                                         problem.getNodes()[tx1][ty1]));
                                 algorithm.setOptionPane(false);
-                                var solution_node = algorithm.run(prob);
+                                try {
+                                    var solution_node = algorithm.run(prob);
+                                    prob.problem_reset();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
                                 return algorithm.getSolutionCost();
                             });
                             results_BFS.add(task_0);
@@ -208,7 +217,12 @@ public class Handler implements MouseListener {
                                         problem.getNodes()[tx0][ty0],
                                         problem.getNodes()[tx1][ty1]));
                                 algorithm.setOptionPane(false);
-                                var solution_node = algorithm.run(prob);
+                                try {
+                                    var solution_node = algorithm.run(prob);
+                                    prob.problem_reset();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
                                 return algorithm.getSolutionCost();
                             });
                             results_BestFirst.add(task_1);
@@ -221,7 +235,12 @@ public class Handler implements MouseListener {
                                         problem.getNodes()[tx0][ty0],
                                         problem.getNodes()[tx1][ty1]));
                                 algorithm.setOptionPane(false);
-                                var solution_node = algorithm.run(prob);
+                                try {
+                                    var solution_node = algorithm.run(prob);
+                                    prob.problem_reset();
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
                                 return algorithm.getSolutionCost();
                             });
                             results_UCS.add(task_2);
@@ -234,7 +253,12 @@ public class Handler implements MouseListener {
                                         problem.getNodes()[tx0][ty0],
                                         problem.getNodes()[tx1][ty1]));
                                 algorithm.setOptionPane(false);
-                                var solution_node = algorithm.run(prob);
+                                try {
+                                    var solution_node = algorithm.run(prob);
+                                    prob.problem_reset();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                                 return algorithm.getSolutionCost();
                             });
                             results_Astar.add(task_3);
@@ -280,6 +304,7 @@ public class Handler implements MouseListener {
                             }
                         }
                         executor.close();
+                        log.info("executor stopped");
                     }
                 }
         );

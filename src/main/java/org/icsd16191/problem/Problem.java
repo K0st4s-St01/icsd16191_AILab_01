@@ -23,6 +23,13 @@ public class Problem {
     private int tx_0;
     private int ty_0;
 
+    public void problem_reset(){
+        for (int i=0;i<n;i++){
+            for (int j=0;j<n;j++){
+                nodes[i][j].setParent(null);
+            }
+        }
+    }
 
     public Problem(Integer n, Double p, Integer maximumCost) {
         this.n = n;
