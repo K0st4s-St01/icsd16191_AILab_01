@@ -1,5 +1,7 @@
 package org.icsd16191.algorithms;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.icsd16191.problem.Problem;
 
@@ -15,6 +17,9 @@ public class UCS implements Algorithm{
     private HashMap<Problem.Node,Integer> reached;//path cost
     Problem.Node closestTarget = null;
     Problem.Node solution = null;
+    @Setter
+    boolean optionPane = true;
+    @Getter
     private Utillities.Result solutionCost=null;
 
     @Override
@@ -73,7 +78,7 @@ public class UCS implements Algorithm{
             if(node.getState().equals(Problem.State.TARGET)){
                 solution=node;
                 log.info("FOUND SOLUTION NODE {}",node);
-                solutionCost = Utillities.getPathCost(node);
+                solutionCost = Utillities.getPathCost(node,reached.keySet().size(),0);
                 return node;
             }
             for (var child : expand(problem,node)){
@@ -89,7 +94,10 @@ public class UCS implements Algorithm{
                 }
             }
         }
-        JOptionPane.showMessageDialog(null, "No solution found", "Message", JOptionPane.INFORMATION_MESSAGE);
+        solutionCost = Utillities.getPathCost(null,reached.keySet().size(),1);
+
+        if (optionPane)
+            JOptionPane.showMessageDialog(null, "No solution found", "Message", JOptionPane.INFORMATION_MESSAGE);
         return null;
     }
 
