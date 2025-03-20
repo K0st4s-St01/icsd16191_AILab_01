@@ -3,18 +3,20 @@ package org.icsd16191.algorithms;
 import lombok.extern.slf4j.Slf4j;
 import org.icsd16191.problem.Problem;
 
+import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.PriorityQueue;
+
 @Slf4j
 public class Astar implements Algorithm{
     private Problem.Node initial;
     private PriorityQueue<Problem.Line> frontier;
-    private HashMap<Problem.Line,Integer> reached;//path cost
+    private HashMap<Problem.Node,Integer> reached;//path cost
     Problem.Node closestTarget = null;
     Problem.Node solution = null;
+    private Integer solutionCost = null;
+
     @Override
     public void render(Graphics2D g, int size) {
 
@@ -22,27 +24,30 @@ public class Astar implements Algorithm{
         if (solution!=null){
             for(var node : reached.keySet()){
                 g.setColor(Color.YELLOW);
-                g.fillRect(node.getNode().getX() * size * 2 + 100, node.getNode().getY() * size * 2 + 100, size + 10, size + 10);
+                g.fillRect(node.getX() * size * 2 + 100, node.getY() * size * 2 + 100, size + 10, size + 10);
             }
         }
         while (solution_ptr != null && solution_ptr.getParent() != null) {
             if (solution_ptr.getState().equals(Problem.State.TARGET)){
                 g.setColor(Color.RED);
+            }else if(solution_ptr.getState().equals(Problem.State.INITIAL)){
+                g.setColor(Color.GREEN);
             }else{
                 g.setColor(Color.MAGENTA);
             }
             g.fillRect(solution_ptr.getX() * size * 2 + 100, solution_ptr.getY() * size * 2 + 100, size + 2, size + 2);
             solution_ptr = solution_ptr.getParent();
         }
-        if (solution_ptr!= null){
-            g.setColor(Color.green);
-            g.fillRect(solution_ptr.getX() * size * 2 + 100, solution_ptr.getY() * size * 2 + 100, size + 2, size + 2);
+        if (solutionCost != null) {
+            g.setColor(Color.RED);
+            g.drawString("pathCost "+this.solutionCost,50,50);
         }
     }
 
     public Astar(Problem.Node initial, java.util.List<Problem.Node> targets){
+        initial.setParent(null);
         this.initial = initial;
-        double minDistance = Integer.MAX_VALUE;
+        double minDistance = Double.MAX_VALUE;
         for (var target:targets){
             double distance = Math.hypot(target.getX()-initial.getX(),target.getY()-initial.getY());
             if(minDistance > distance){
@@ -61,25 +66,30 @@ public class Astar implements Algorithm{
     public Problem.Node run(Problem problem) {
         var node = new Problem.Line(initial,0);
         frontier.add(new Problem.Line(initial,0));
-        reached.put(node, node.getCost());
+        reached.put(node.getNode(), node.getCost());
         while (!frontier.isEmpty()){
             node = frontier.poll();
             log.info("Astar running current = {}",node);
             if(node.getNode().getState().equals(Problem.State.TARGET)){
                 solution=node.getNode();
                 log.info("FOUND SOLUTION NODE {}",node);
+                solutionCost = Utillities.getPathCost(solution);
                 return solution;
             }
             for (var child : expand(problem,node.getNode())){
-                if(!reached.containsKey(child.getNode())){
-                    child.getNode().setParent(node.getNode());
-                    if(child!=null) {
-                        reached.put(child, child.getCost());
-                        frontier.add(child);
-                    }
+                var parent =  node.getNode().getParent();
+                if(parent!=null && parent.equals(child)) {
+                    continue;
+                }
+                child.setParent(node.getNode());
+                int newCost = reached.get(node.getNode()) + child.getCost();
+                if(!reached.containsKey(child.getNode()) || newCost < reached.get(child.getNode())){
+                    reached.put(child.getNode(), child.getCost());
+                    frontier.add(child);
                 }
             }
         }
+        JOptionPane.showMessageDialog(null, "No solution found", "Message", JOptionPane.INFORMATION_MESSAGE);
         return null;
     }
 
@@ -88,6 +98,7 @@ public class Astar implements Algorithm{
         var list = new ArrayList<Problem.Line>();
         for (int i=0;i<4;i++){
             if (node.getLines()[i]!=null ){
+                var parent = node.getLines()[i].getNode().getParent();
                 if (!reached.containsKey(node.getLines()[i].getNode()))
                     list.add(node.getLines()[i]);
             }

@@ -129,7 +129,7 @@ public class Handler implements MouseListener {
         );
 
         this.buttons.add(
-                new Button(13,7,200,50,"A*") {
+                new Button(13,9,200,50,"A*") {
                     @Override
                     public void effect() {
                         try {

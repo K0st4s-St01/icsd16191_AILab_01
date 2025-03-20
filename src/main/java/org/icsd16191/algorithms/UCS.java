@@ -3,6 +3,7 @@ package org.icsd16191.algorithms;
 import lombok.extern.slf4j.Slf4j;
 import org.icsd16191.problem.Problem;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -14,6 +15,8 @@ public class UCS implements Algorithm{
     private HashMap<Problem.Node,Integer> reached;//path cost
     Problem.Node closestTarget = null;
     Problem.Node solution = null;
+    private Integer solutionCost=null;
+
     @Override
     public void render(Graphics2D g, int size) {
 
@@ -36,12 +39,17 @@ public class UCS implements Algorithm{
         if (solution_ptr!= null){
             g.setColor(Color.green);
             g.fillRect(solution_ptr.getX() * size * 2 + 100, solution_ptr.getY() * size * 2 + 100, size + 2, size + 2);
+            if (solutionCost != null) {
+                g.setColor(Color.RED);
+                g.drawString("pathCost "+this.solutionCost,50,50);
+            }
         }
     }
 
     public UCS(Problem.Node initial, java.util.List<Problem.Node> targets){
+        initial.setParent(null);
         this.initial = initial;
-        double minDistance = Integer.MAX_VALUE;
+        double minDistance = Double.MAX_VALUE;
         for (var target:targets){
             double distance = Math.hypot(target.getX()-initial.getX(),target.getY()-initial.getY());
             if(minDistance > distance){
@@ -49,7 +57,7 @@ public class UCS implements Algorithm{
                 closestTarget = target;
             }
         }
-        this.frontier = new PriorityQueue<>(Comparator.comparingInt(line -> line.getCost()));
+        this.frontier = new PriorityQueue<>(Comparator.comparingInt(line ->reached.getOrDefault(line.getNode(), Integer.MAX_VALUE) + line.getCost()));
         this.reached = new HashMap<>();
     }
 
@@ -65,18 +73,23 @@ public class UCS implements Algorithm{
             if(node.getState().equals(Problem.State.TARGET)){
                 solution=node;
                 log.info("FOUND SOLUTION NODE {}",node);
+                solutionCost = Utillities.getPathCost(node);
                 return node;
             }
             for (var child : expand(problem,node)){
-                if(!reached.containsKey(child.getNode())){
+                int newCost = reached.get(node) + child.getCost();
+                if(!reached.containsKey(child.getNode())
+                    || newCost < reached.get(child.getNode())
+                ){
                     child.getNode().setParent(node);
                     if(child!=null) {
-                        reached.put(child.getNode(), reached.get(node)+child.getCost());
+                        reached.put(child.getNode(), newCost);
                         frontier.add(child);
                     }
                 }
             }
         }
+        JOptionPane.showMessageDialog(null, "No solution found", "Message", JOptionPane.INFORMATION_MESSAGE);
         return null;
     }
 

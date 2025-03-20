@@ -224,5 +224,21 @@ public class Problem {
     public static class Line{
         Node node;
         Integer cost;
+
+        @Override
+        public boolean equals(Object object) {
+            if (object == null || getClass() != object.getClass()) return false;
+            Line line = (Line) object;
+            return Objects.equals(node, line.node) && Objects.equals(cost, line.cost);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(node, cost);
+        }
+
+        public void setParent(Node parent) {
+            node.setParent(parent);
+        }
     }
 }

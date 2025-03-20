@@ -3,6 +3,7 @@ package org.icsd16191.algorithms;
 import lombok.extern.slf4j.Slf4j;
 import org.icsd16191.problem.Problem;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -14,6 +15,7 @@ public class BFS implements Algorithm{
     private HashSet<Problem.Node> reached;//path cost
     Problem.Node closestTarget = null;
     Problem.Node solution = null;
+    private Integer solutionCost=null;
     @Override
     public void render(Graphics2D g, int size) {
 
@@ -36,12 +38,17 @@ public class BFS implements Algorithm{
             if (solution_ptr!= null){
                 g.setColor(Color.green);
                 g.fillRect(solution_ptr.getX() * size * 2 + 100, solution_ptr.getY() * size * 2 + 100, size + 2, size + 2);
+                if (solutionCost != null) {
+                    g.setColor(Color.RED);
+                    g.drawString("pathCost "+this.solutionCost,50,50);
+                }
             }
     }
 
     public BFS(Problem.Node initial, java.util.List<Problem.Node> targets){
+        initial.setParent(null);
         this.initial = initial;
-        double minDistance = Integer.MAX_VALUE;
+        double minDistance = Double.MAX_VALUE;
         for (var target:targets){
             double distance = Math.hypot(target.getX()-initial.getX(),target.getY()-initial.getY());
             if(minDistance > distance){
@@ -64,6 +71,7 @@ public class BFS implements Algorithm{
             if(node.getState().equals(Problem.State.TARGET)){
                 solution=node;
                 log.info("FOUND SOLUTION NODE {}",node);
+                solutionCost = Utillities.getPathCost(node);
                 return node;
             }
             for (var child : expand(problem,node)){
@@ -77,6 +85,7 @@ public class BFS implements Algorithm{
                 }
             }
         }
+        JOptionPane.showMessageDialog(null, "No solution found", "Message", JOptionPane.INFORMATION_MESSAGE);
         return null;
     }
 
