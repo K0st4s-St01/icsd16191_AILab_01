@@ -64,7 +64,7 @@ public class Astar implements Algorithm{
         reached.put(node, node.getCost());
         while (!frontier.isEmpty()){
             node = frontier.poll();
-            log.info("Best first search running current = {}",node);
+            log.info("Astar running current = {}",node);
             if(node.getNode().getState().equals(Problem.State.TARGET)){
                 solution=node.getNode();
                 log.info("FOUND SOLUTION NODE {}",node);
