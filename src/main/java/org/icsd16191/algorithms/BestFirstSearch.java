@@ -50,8 +50,8 @@ public class BestFirstSearch implements Algorithm{
             }
         }
         this.frontier = new PriorityQueue<>((o1, o2) -> Double.compare(
-                Math.hypot(closestTarget.getX()-o1.getX(), closestTarget.getY()-o1.getY()),
-                Math.hypot(closestTarget.getX()-o2.getX(), closestTarget.getY()-o2.getY())
+                Math.abs(closestTarget.getX()-o1.getX()) + Math.abs(closestTarget.getY()-o1.getY()),
+                Math.abs(closestTarget.getX()-o2.getX()) + Math.abs(closestTarget.getY()-o2.getY())
         ));
         this.reached = new HashMap<>();
     }
