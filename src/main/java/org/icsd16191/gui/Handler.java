@@ -1,8 +1,6 @@
 package org.icsd16191.gui;
 
-import org.icsd16191.algorithms.Algorithm;
-import org.icsd16191.algorithms.BFS;
-import org.icsd16191.algorithms.BestFirstSearch;
+import org.icsd16191.algorithms.*;
 import org.icsd16191.problem.Problem;
 
 import javax.swing.*;
@@ -85,6 +83,70 @@ public class Handler implements MouseListener {
                         int ty1 = problem.getTy_1();
                         //initial , list(targets)
                         algorithm = new BFS(
+                                problem.getNodes()[sx][sy]
+                                ,List.of(
+                                problem.getNodes()[tx0][ty0],
+                                problem.getNodes()[tx1][ty1]
+                        )
+                        );
+                        algorythmThread = new Thread(() -> algorithm.run(problem));
+                        algorythmThread.start();
+
+                    }
+                }
+        );
+
+        this.buttons.add(
+                new Button(13,7,200,50,"UCS") {
+                    @Override
+                    public void effect() {
+                        try {
+                            if (algorythmThread!=null)
+                                algorythmThread.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        algorithm=null;
+                        int sx = problem.getSx();
+                        int sy = problem.getSy();
+                        int tx0 = problem.getTx_0();
+                        int ty0 = problem.getTy_0();
+                        int tx1 = problem.getTx_1();
+                        int ty1 = problem.getTy_1();
+                        //initial , list(targets)
+                        algorithm = new UCS(
+                                problem.getNodes()[sx][sy]
+                                ,List.of(
+                                problem.getNodes()[tx0][ty0],
+                                problem.getNodes()[tx1][ty1]
+                        )
+                        );
+                        algorythmThread = new Thread(() -> algorithm.run(problem));
+                        algorythmThread.start();
+
+                    }
+                }
+        );
+
+        this.buttons.add(
+                new Button(13,7,200,50,"A*") {
+                    @Override
+                    public void effect() {
+                        try {
+                            if (algorythmThread!=null)
+                                algorythmThread.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        algorithm=null;
+                        int sx = problem.getSx();
+                        int sy = problem.getSy();
+                        int tx0 = problem.getTx_0();
+                        int ty0 = problem.getTy_0();
+                        int tx1 = problem.getTx_1();
+                        int ty1 = problem.getTy_1();
+                        //initial , list(targets)
+                        algorithm = new Astar(
                                 problem.getNodes()[sx][sy]
                                 ,List.of(
                                 problem.getNodes()[tx0][ty0],

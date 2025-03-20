@@ -49,7 +49,7 @@ public class BestFirstSearch implements Algorithm{
                 closestTarget = target;
             }
         }
-        this.frontier = new PriorityQueue<>((o1, o2) -> Double.compare(
+        this.frontier = new PriorityQueue<>((o1, o2) -> Integer.compare(
                 Math.abs(closestTarget.getX()-o1.getX()) + Math.abs(closestTarget.getY()-o1.getY()),
                 Math.abs(closestTarget.getX()-o2.getX()) + Math.abs(closestTarget.getY()-o2.getY())
         ));
