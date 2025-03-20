@@ -11,7 +11,7 @@ public class Window extends JFrame implements Runnable{
     public Window() throws HeadlessException {
         setTitle("icsd16191.Lab_01");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1200,900);
+        setSize(1600,900);
         setResizable(true);
 
         this.addMouseListener(handler);

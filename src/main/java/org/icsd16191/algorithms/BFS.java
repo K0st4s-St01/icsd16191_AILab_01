@@ -15,7 +15,7 @@ public class BFS implements Algorithm{
     private HashSet<Problem.Node> reached;//path cost
     Problem.Node closestTarget = null;
     Problem.Node solution = null;
-    private Integer solutionCost=null;
+    private Utillities.Result solutionCost=null;
     @Override
     public void render(Graphics2D g, int size) {
 
@@ -40,7 +40,7 @@ public class BFS implements Algorithm{
                 g.fillRect(solution_ptr.getX() * size * 2 + 100, solution_ptr.getY() * size * 2 + 100, size + 2, size + 2);
                 if (solutionCost != null) {
                     g.setColor(Color.RED);
-                    g.drawString("pathCost "+this.solutionCost,50,50);
+                    g.drawString(""+this.solutionCost,50,50);
                 }
             }
     }

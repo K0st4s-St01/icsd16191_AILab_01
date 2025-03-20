@@ -15,7 +15,7 @@ public class Astar implements Algorithm{
     private HashMap<Problem.Node,Integer> reached;//path cost
     Problem.Node closestTarget = null;
     Problem.Node solution = null;
-    private Integer solutionCost = null;
+    private Utillities.Result solutionCost = null;
 
     @Override
     public void render(Graphics2D g, int size) {
@@ -40,7 +40,7 @@ public class Astar implements Algorithm{
         }
         if (solutionCost != null) {
             g.setColor(Color.RED);
-            g.drawString("pathCost "+this.solutionCost,50,50);
+            g.drawString(""+this.solutionCost,50,50);
         }
     }
 
